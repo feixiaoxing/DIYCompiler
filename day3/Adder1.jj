@@ -1,0 +1,71 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Adder)
+import java.io.*;
+public class Adder {
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+                System.out.println(evaluate(arg));
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static long evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return new Adder(reader).expr();
+    }
+}
+PARSER_END(Adder)
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+TOKEN: {
+    <INTEGER: (["0"-"9"])+>
+}
+ 
+long expr() throws NumberFormatException :
+{
+    long a ;
+    long b ;
+    long value = 0 ;
+}
+{
+	a = primary() {value = a;}
+    (
+	 "+" b = primary()
+    { 
+		value  += b; 
+	}|
+	 "-" b = primary()
+    { 
+		value -= b; 
+	}
+	)*
+    <EOF>
+    { return value ; }
+}
+ 
+long primary() throws NumberFormatException :
+{
+    Token a ;
+    Token b ;
+    long value = 0 ;
+}
+{
+	a = <INTEGER> {value = Integer.parseInt( a.image );}
+    (
+	 "*" b = <INTEGER>
+    { 
+		value  *= Integer.parseInt(b.image); 
+	}|
+	 "/" b = <INTEGER>
+    { 
+		value /= Integer.parseInt(b.image); 
+	}
+	)*
+    { return value ; }
+}
