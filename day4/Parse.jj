@@ -1,0 +1,45 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Parse)
+import java.io.*;
+public class Parse {
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+                evaluate(arg);
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static long evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        new Parse(reader).expr();
+		return 0;
+    }
+}
+PARSER_END(Parse)
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+TOKEN: {
+    <INTEGER: (["0"-"9"])+>
+}
+ 
+long expr() throws NumberFormatException :
+{
+    Token a ;
+    Token b ;
+    int value = 0 ;
+}
+{
+	a = <INTEGER> 
+	{
+		value = Integer.parseInt( a.image );
+		System.out.println(value);
+	}
+    <EOF>
+    { return value ; }
+}
