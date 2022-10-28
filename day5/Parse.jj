@@ -1,0 +1,71 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Parse)
+import java.io.*;
+public class Parse {
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+                System.out.println(evaluate(arg));
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static long evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return new Parse(reader).expr();
+    }
+}
+PARSER_END(Parse)
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+
+TOKEN: { <INTEGER: (["0"-"9"])+> }
+
+TOKEN: {<IF : "if">}
+TOKEN: {<ELSE : "else">}
+TOKEN: {<FOR : "for">}
+TOKEN: {<WHILE : "while">}
+TOKEN: {<DO : "do">}
+TOKEN: {<SWITCH : "switch">}
+TOKEN: {<CASE : "case">}
+
+TOKEN: {<GOTO : "goto">}
+
+TOKEN: {<INT : "int">}
+TOKEN: {<SHORT : "short">}
+TOKEN: {<FLOAT : "float">}
+TOKEN: {<DOUBLE : "double">}
+
+TOKEN: {<ADD : "+">}
+TOKEN: {<SUB : "-">}
+TOKEN: {<MUL : "*">}
+TOKEN: {<DIV : "/">}
+
+TOKEN: {<IDENTIFIER: ["a"-"z","A"-"Z","_"](["a"-"z","A"-"Z","_","0"-"9"])*>}
+
+TOKEN: {<SEMICOLON: ";">}
+TOKEN: {<LEFTBRACE: "{">}
+TOKEN: {<RIGHTBRACE: "}">}
+
+ 
+long expr() throws NumberFormatException :
+{
+    Token a ;
+    Token b ;
+    int value = 0 ;
+}
+{
+	a = <INTEGER> { value = Integer.parseInt( a.image );}
+	
+	<ADD>
+	
+	b = <INTEGER> { value += Integer.parseInt( b.image );}
+	
+    <EOF>
+    { return value ; }
+}
