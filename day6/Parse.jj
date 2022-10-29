@@ -1,0 +1,124 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Parse)
+import java.io.*;
+public class Parse {
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+				long value = evaluate(arg);
+				System.out.println("");
+                System.out.println(value);
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static long evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return new Parse(reader).expr();
+    }
+}
+PARSER_END(Parse)
+ 
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+
+TOKEN: { <INTEGER: (["0"-"9"])+> }
+
+TOKEN: {<ADD : "+">}
+TOKEN: {<SUB : "-">}
+TOKEN: {<MUL : "*">}
+TOKEN: {<DIV : "/">}
+TOKEN: {<EQUAL : "=">}
+
+TOKEN: {<IDENTIFIER: ["a"-"z","A"-"Z","_"](["a"-"z","A"-"Z","_","0"-"9"])*>}
+
+TOKEN: {<SEMICOLON: ";">}
+TOKEN: {<LEFTBRACKETS: "[">}
+TOKEN: {<RIGHTBRACKETS: "]">}
+TOKEN: {<LEFTBRACE: "{">}
+TOKEN: {<RIGHTBRACE: "}">}
+TOKEN: {<LEFTPARENTHESES: "(">}
+TOKEN: {<RIGHTPARENTHESES: ")">}
+ 
+long expr() throws NumberFormatException :
+{
+    long value = 0 ;
+}
+{
+	value = main_expr() 
+    <EOF>
+    { return value ; }
+}
+ 
+long main_expr() throws NumberFormatException :
+{
+    long a ;
+    long b ;
+    long value = 0 ;
+}
+{
+	{System.out.print("(");}
+	a = primary() {value = a;}
+    (
+	 <ADD> {System.out.print("+");} b = primary()
+    { 
+		value  += b; 
+	}|
+	 <SUB> {System.out.print("-");} b = primary()
+    { 
+		value -= b; 
+	}
+	)*
+	{System.out.print(")");}
+    { return value ; }
+}
+ 
+long primary() throws NumberFormatException :
+{
+    long a ;
+    long b ;
+    long value = 0 ;
+}
+{
+	{System.out.print("(");}
+	a = secondary() {value = a;}
+    (
+	 <MUL> {System.out.print("*");} b = secondary()
+    { 
+		value  *= b; 
+	}|
+	 <DIV> {System.out.print("/");} b = secondary()
+    { 
+		value /= b; 
+	}
+	)*
+	
+	{System.out.print(")");}
+    { return value ; }
+}
+ 
+long secondary() throws NumberFormatException:
+{
+	Token a;
+	long b = 0;
+	long value = 0;
+}
+{
+	(
+		a = <INTEGER> 
+		{
+			value = Integer.parseInt( a.image );
+			System.out.print(value);
+		} |
+		<LEFTPARENTHESES> {System.out.print("(");}
+		b =main_expr() { value = b;}
+		<RIGHTPARENTHESES> {System.out.print(")");}
+	)
+	
+	{ return value;}
+}
