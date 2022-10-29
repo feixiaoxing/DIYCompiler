@@ -94,14 +94,14 @@ public class Parse {
         for (String arg : args) {
             try {
 				//evaluate(arg);
-                System.out.println(evaluate(arg).Get_Value());
+                System.out.println(((adderSubNode)evaluate(arg)).Get_Value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
         }
     }
  
-    public static adderSubNode evaluate(String src) throws ParseException {
+    public static Node evaluate(String src) throws ParseException {
         Reader reader = new StringReader(src);
         return new Parse(reader).expr();
     }
@@ -113,7 +113,7 @@ TOKEN: {
     <INTEGER: (["0"-"9"])+>
 }
  
-adderSubNode expr() throws NumberFormatException :
+Node expr() throws NumberFormatException :
 {
     Token a ;
     Token b ;
