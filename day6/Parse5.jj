@@ -80,15 +80,15 @@ public class Parse {
 		@Override
 		public boolean check()
 		{
-			if(false == check(Get_Left_Node()) || false == check(Get_Right_Node()))
+			if(false == Get_Left_Node().check() || false == Get_Right_Node().check())
 			{
 				return false;
 			}
 			
-			Node right_node = Get_Right_Node;
-			if(right_node->Get_Node_Type == "value")
+			Node right_node = Get_Right_Node();
+			if(right_node.Get_Node_Type() == "value")
 			{
-				if((ValueNode)(right_node).Get_Value == 0)
+				if(((ValueNode)(right_node)).Get_Value() == 0)
 				{
 					return false;
 				}
