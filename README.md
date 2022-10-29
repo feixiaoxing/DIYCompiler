@@ -1,4 +1,4 @@
-"# DIYCompiler" 
+Compile method:
 
 1，java -classpath C:\Users\feixiaoxing\Desktop\DIYCompiler\javacc-7.0.10.jar javacc ./day1/Adder.jj
 
