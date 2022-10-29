@@ -93,14 +93,15 @@ public class Parse {
     public static void main(String[] args) {
         for (String arg : args) {
             try {
-                System.out.println(evaluate(arg));
+				evaluate(arg);
+                //System.out.println(evaluate(arg));
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
         }
     }
  
-    public static long evaluate(String src) throws ParseException {
+    public static adderNode evaluate(String src) throws ParseException {
         Reader reader = new StringReader(src);
         return new Parse(reader).expr();
     }
@@ -112,7 +113,7 @@ TOKEN: {
     <INTEGER: (["0"-"9"])+>
 }
  
-long expr() throws NumberFormatException :
+adderNode expr() throws NumberFormatException :
 {
     Token a ;
     Token b ;
@@ -132,7 +133,7 @@ long expr() throws NumberFormatException :
 
 		adder = new adderNode();
 		adder.Set_Left_Node(va);
-		//adder.Set_Value(value_a);
+		adder.Set_Value(value_a);
 	}
 	
 	(
@@ -155,16 +156,16 @@ long expr() throws NumberFormatException :
 		else
 		{
 			prev = adder;
-			adder = new adder();
+			adder = new adderNode();
 			
 			adder.Set_Left_Node(prev);
 			adder.Set_Right_Node(vb);	
 		}
 		
 		adder.Set_Opr_Type("+");
-		//adder.Set_Value(value);
+		adder.Set_Value(value);
 	}
 	)*
     <EOF>
-    { return value ; }
+    { return adder ; }
 }
