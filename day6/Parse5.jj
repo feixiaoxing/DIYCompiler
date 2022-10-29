@@ -1,0 +1,218 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Parse)
+import java.io.*;
+public class Parse {
+
+	// base class Node
+	abstract class Node
+	{
+		public Node left_node;
+		public Node right_node;
+		public String node_type;
+		
+		public Node() {this.left_node = this.right_node = null;}
+		
+		public void Set_Left_Node(Node left) {this.left_node = left;}
+		public Node Get_Left_Node() { return this.left_node;}
+
+		public void Set_Right_Node(Node right) {this.right_node = right;}
+		public Node Get_Right_Node() {return this.right_node;}
+		
+		public void Set_Node_Type(String type) {this.node_type = type;}
+		public String Get_Node_Type() {return this.node_type;}
+		
+		abstract public boolean check();  // for semantic check and symbol generation
+		abstract public boolean translate(); // for intermediate code generation
+	}
+	
+	// Value Node
+	class ValueNode extends Node
+	{
+		public String value_name;
+		public int value;
+	
+		public ValueNode() {}
+
+		// there are some node without value_name, so move it here			
+		public void Set_Value_Name() {this.value_name = value_name;}
+		public String Get_Value_Name() {return this.value_name;}
+
+		// there are some node without value, so move it here
+		public void Set_Value(int value) {this.value = value;}
+		public int Get_Value() {return this.value;}
+		
+		@Override
+		public boolean check()
+		{
+			return true;
+		}
+
+		@Override
+		public boolean translate()
+		{
+			return true;
+		}
+	}
+	
+	// adder Node
+	class mulDivNode extends Node
+	{
+		public String opr_type;
+		public String value_name;
+		public int value;
+	
+		public mulDivNode() {}
+
+		public void Set_Opr_Type(String opr_type) {this.opr_type = opr_type;}
+		public String Get_Opr_Type() {return this.opr_type;}
+
+		// there are some node without value_name, so move it here		
+		public void Set_Value_Name() {this.value_name = value_name;}
+		public String Get_Value_Name() {return this.value_name;}
+
+		// there are some node without value, so move it here
+		public void Set_Value(int value) {this.value = value;}
+		public int Get_Value() {return this.value;}
+		
+		@Override
+		public boolean check()
+		{
+			if(false == check(Get_Left_Node()) || false == check(Get_Right_Node()))
+			{
+				return false;
+			}
+			
+			Node right_node = Get_Right_Node;
+			if(right_node->Get_Node_Type == "value")
+			{
+				if((ValueNode)(right_node).Get_Value == 0)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+
+		@Override
+		public boolean translate()
+		{
+			return true;
+		}
+	}
+
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+				//evaluate(arg);
+                System.out.println(((mulDivNode)evaluate(arg)).Get_Value());
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static Node evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return new Parse(reader).expr();
+    }
+}
+PARSER_END(Parse)
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+TOKEN: {
+    <INTEGER: (["0"-"9"])+>
+}
+ 
+Node expr() throws NumberFormatException :
+{
+    Token a ;
+    Token b ;
+    int value = 0 ;
+	mulDivNode adder;
+}
+{
+    a = <INTEGER> 
+	{
+		int value_a;
+		ValueNode va;
+
+		value_a = Integer.parseInt( a.image );
+
+		va = new ValueNode();
+		va.Set_Value(value_a);
+		va.Set_Node_Type("value");
+
+		adder = new mulDivNode();
+		adder.Set_Node_Type("*/");
+		adder.Set_Left_Node(va);
+		adder.Set_Value(value_a);
+	}
+	
+	(
+	"*" b = <INTEGER>
+    {
+		int value_b;
+		ValueNode vb;
+		mulDivNode prev;
+
+		value_b = Integer.parseInt(b.image);
+		value = adder.Get_Value() * value_b;
+
+		vb = new ValueNode();
+		vb.Set_Value(value_b);
+		vb.Set_Node_Type("value");
+
+		if(null == adder.Get_Right_Node())
+		{
+			adder.Set_Right_Node(vb);
+		}
+		else
+		{
+			prev = adder;
+			adder = new mulDivNode();
+			adder.Set_Node_Type("*/");
+			
+			adder.Set_Left_Node(prev);
+			adder.Set_Right_Node(vb);	
+		}
+		
+		adder.Set_Opr_Type("*");
+		adder.Set_Value(value);
+	}|
+	"/" b = <INTEGER>
+    {
+		int value_b;
+		ValueNode vb;
+		mulDivNode prev;
+
+		value_b = Integer.parseInt(b.image);
+		value = adder.Get_Value() / value_b;
+
+		vb = new ValueNode();
+		vb.Set_Value(value_b);
+
+		if(null == adder.Get_Right_Node())
+		{
+			adder.Set_Right_Node(vb);
+		}
+		else
+		{
+			prev = adder;
+			adder = new mulDivNode();
+			
+			adder.Set_Left_Node(prev);
+			adder.Set_Right_Node(vb);	
+		}
+		
+		adder.Set_Opr_Type("/");
+		adder.Set_Value(value);
+	}
+	
+	)*
+    <EOF>
+    { return adder ; }
+}
