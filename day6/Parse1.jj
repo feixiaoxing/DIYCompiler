@@ -12,6 +12,7 @@ public class Parse {
 		public Node left_node;
 		public Node right_node;
 		public String node_type;
+		public int value;
 		
 		public Node() {this.left_node = this.right_node = null;}
 		
@@ -23,6 +24,9 @@ public class Parse {
 		
 		public void Set_Node_Type(String type) {this.node_type = type;}
 		public String Get_Node_Type() {return this.node_type;}
+
+		public void Set_Value(int value) {this.value = value;}
+		public int Get_Value() {return this.value;}
 		
 		abstract public void process();
 	}
@@ -31,12 +35,8 @@ public class Parse {
 	class ValueNode extends Node
 	{
 		public String value_name;
-		public int value;
 	
 		public ValueNode() {}
-		
-		public void Set_Value(int value) {this.value = value;}
-		public int Get_Value() {return this.value;}
 		
 		public void Set_Value_Name() {this.value_name = value_name;}
 		public String Get_Value_Name() {return this.value_name;}
@@ -59,9 +59,6 @@ public class Parse {
 
 		public void Set_Opr_Type(String opr_type) {this.opr_type = opr_type;}
 		public String Get_Opr_Type() {return this.opr_type;}
-
-		public void Set_Value(int value) {this.value = value;}
-		public int Get_Value() {return this.value;}
 		
 		public void Set_Value_Name() {this.value_name = value_name;}
 		public String Get_Value_Name() {return this.value_name;}
@@ -103,8 +100,27 @@ long expr() throws NumberFormatException :
 }
 {
     a = <INTEGER> "+" b = <INTEGER>
-    { 
-		value = Integer.parseInt( a.image ) + Integer.parseInt(b.image);
+    {
+		int value_a;
+		int value_b;
+		ValueNode va;
+		ValueNode vb;
+		AddNode add;
+
+		value_a = Integer.parseInt( a.image );
+		value_b = Integer.parseInt(b.image);
+		value = value_a + value_b;
+
+		va = new ValueNode();
+		va.Set_Value(value_a);
+
+		vb = new ValueNode();
+		vb.Set_Value(value_b);
+
+		add = new AddNode();
+		add.Set_Opr_Type("+");
+		add.Set_Left_Node(va);
+		add.Set_Right_Node(vb);
 	}
     <EOF>
     { return value ; }
