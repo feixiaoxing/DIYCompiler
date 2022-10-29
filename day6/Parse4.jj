@@ -24,8 +24,8 @@ public class Parse {
 		public void Set_Node_Type(String type) {this.node_type = type;}
 		public String Get_Node_Type() {return this.node_type;}
 		
-		abstract public void check();  // for semantic check and symbol generation
-		abstract public void translate(); // for intermediate code generation
+		abstract public boolean check();  // for semantic check and symbol generation
+		abstract public boolean translate(); // for intermediate code generation
 	}
 	
 	// Value Node
@@ -45,15 +45,15 @@ public class Parse {
 		public int Get_Value() {return this.value;}
 		
 		@Override
-		public void check()
+		public boolean check()
 		{
-			return;
+			return true;
 		}
 
 		@Override
-		public void translate()
+		public boolean translate()
 		{
-			return;
+			return true;
 		}
 	}
 	
@@ -78,15 +78,15 @@ public class Parse {
 		public int Get_Value() {return this.value;}
 		
 		@Override
-		public void check()
+		public boolean check()
 		{
-			return;
+			return true;
 		}
 
 		@Override
-		public void translate()
+		public boolean translate()
 		{
-			return;
+			return true;
 		}
 	}
 
