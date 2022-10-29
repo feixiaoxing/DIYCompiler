@@ -93,8 +93,8 @@ public class Parse {
     public static void main(String[] args) {
         for (String arg : args) {
             try {
-				evaluate(arg);
-                //System.out.println(evaluate(arg));
+				//evaluate(arg);
+                System.out.println(evaluate(arg).Get_Value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
@@ -144,7 +144,7 @@ adderNode expr() throws NumberFormatException :
 		adderNode prev;
 
 		value_b = Integer.parseInt(b.image);
-		value = adder.Get_Value() * value_b;
+		value = adder.Get_Value() + value_b;
 
 		vb = new ValueNode();
 		vb.Set_Value(value_b);
