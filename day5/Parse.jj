@@ -22,50 +22,90 @@ public class Parse {
 }
 PARSER_END(Parse)
  
+ 
 SKIP: { <[" ", "\t", "\r", "\n"]> }
 
 TOKEN: { <INTEGER: (["0"-"9"])+> }
-
-TOKEN: {<IF : "if">}
-TOKEN: {<ELSE : "else">}
-TOKEN: {<FOR : "for">}
-TOKEN: {<WHILE : "while">}
-TOKEN: {<DO : "do">}
-TOKEN: {<SWITCH : "switch">}
-TOKEN: {<CASE : "case">}
-
-TOKEN: {<GOTO : "goto">}
-
-TOKEN: {<INT : "int">}
-TOKEN: {<SHORT : "short">}
-TOKEN: {<FLOAT : "float">}
-TOKEN: {<DOUBLE : "double">}
 
 TOKEN: {<ADD : "+">}
 TOKEN: {<SUB : "-">}
 TOKEN: {<MUL : "*">}
 TOKEN: {<DIV : "/">}
+TOKEN: {<EQUAL : "=">}
 
 TOKEN: {<IDENTIFIER: ["a"-"z","A"-"Z","_"](["a"-"z","A"-"Z","_","0"-"9"])*>}
 
 TOKEN: {<SEMICOLON: ";">}
+TOKEN: {<LEFTBRACKETS: "[">}
+TOKEN: {<RIGHTBRACKETS: "]">}
 TOKEN: {<LEFTBRACE: "{">}
 TOKEN: {<RIGHTBRACE: "}">}
-
+TOKEN: {<LEFTPARENTHESES: "(">}
+TOKEN: {<RIGHTPARENTHESES: ")">}
  
 long expr() throws NumberFormatException :
 {
-    Token a ;
-    Token b ;
-    int value = 0 ;
+    long value = 0 ;
 }
 {
-	a = <INTEGER> { value = Integer.parseInt( a.image );}
-	
-	<ADD>
-	
-	b = <INTEGER> { value += Integer.parseInt( b.image );}
-	
+	value = main_expr() 
     <EOF>
     { return value ; }
+}
+ 
+long main_expr() throws NumberFormatException :
+{
+    long a ;
+    long b ;
+    long value = 0 ;
+}
+{
+	a = primary() {value = a;}
+    (
+	 <ADD> b = primary()
+    { 
+		value  += b; 
+	}|
+	 <SUB> b = primary()
+    { 
+		value -= b; 
+	}
+	)*
+    { return value ; }
+}
+ 
+long primary() throws NumberFormatException :
+{
+    long a ;
+    long b ;
+    long value = 0 ;
+}
+{
+	a = secondary() {value = a;}
+    (
+	 <MUL> b = secondary()
+    { 
+		value  *= b; 
+	}|
+	 <DIV> b = secondary()
+    { 
+		value /= b; 
+	}
+	)*
+    { return value ; }
+}
+ 
+long secondary() throws NumberFormatException:
+{
+	Token a;
+	long b = 0;
+	long value = 0;
+}
+{
+	(
+		a = <INTEGER> {value = Integer.parseInt( a.image );} |
+		<LEFTPARENTHESES> b =main_expr() <RIGHTPARENTHESES> { value = b;}
+	)
+	
+	{ return value;}
 }
