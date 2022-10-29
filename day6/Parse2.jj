@@ -119,7 +119,7 @@ long expr() throws NumberFormatException :
 
 		adder = new adderNode();
 		adder.Set_Left_Node(va);
-		adder.Set_Value(value_a);
+		//adder.Set_Value(value_a);
 	}
 	
 	(
