@@ -1,0 +1,111 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Parse)
+import java.io.*;
+public class Parse {
+
+	// base class Node
+	abstract class Node
+	{
+		public Node left_node;
+		public Node right_node;
+		public String node_type;
+		
+		public Node() {this.left_node = this.right_node = null;}
+		
+		public void Set_Left_Node(Node left) {this.left_node = left;}
+		public Node Get_Left_Node() { return this.left_node;}
+
+		public void Set_Right_Node(Node right) {this.right_node = right;}
+		public Node Get_Right_Node() {return this.right_node;}
+		
+		public void Set_Node_Type(String type) {this.node_type = type;}
+		public String Get_Node_Type() {return this.node_type;}
+		
+		abstract public void process();
+	}
+	
+	// Value Node
+	class ValueNode extends Node
+	{
+		public String value_name;
+		public int value;
+	
+		public ValueNode() {}
+		
+		public void Set_Value(int value) {this.value = value;}
+		public int Get_Value() {return this.value;}
+		
+		public void Set_Value_Name() {this.value_name = value_name;}
+		public String Get_Value_Name() {return this.value_name;}
+		
+		@Override
+		public void process()
+		{
+			return;
+		}
+	}
+	
+	// Add Node
+	class AddNode extends Node
+	{
+		public String opr_type;
+		public String value_name;
+		public int value;
+	
+		public AddNode() {}
+
+		public void Set_Opr_Type(String opr_type) {this.opr_type = opr_type;}
+		public String Get_Opr_Type() {return this.opr_type;}
+
+		public void Set_Value(int value) {this.value = value;}
+		public int Get_Value() {return this.value;}
+		
+		public void Set_Value_Name() {this.value_name = value_name;}
+		public String Get_Value_Name() {return this.value_name;}
+		
+		@Override
+		public void process()
+		{
+			return;
+		}
+	}
+
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+                System.out.println(evaluate(arg));
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static long evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return new Parse(reader).expr();
+    }
+}
+PARSER_END(Parse)
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+TOKEN: {
+    <INTEGER: (["0"-"9"])+>
+}
+ 
+long expr() throws NumberFormatException :
+{
+    Token a ;
+    Token b ;
+    int value = 0 ;
+}
+{
+    a = <INTEGER> "-" b = <INTEGER>
+    { 
+		value = Integer.parseInt( a.image ) - Integer.parseInt(b.image); 
+	}
+    <EOF>
+    { return value ; }
+}
