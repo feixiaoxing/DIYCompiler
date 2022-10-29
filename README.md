@@ -4,5 +4,5 @@
 
 2，C:\Progra~2\Java\jdk1.8.0_91\bin\javac *.java
 
-3，C:\Users\feixiaoxing\Desktop\test>java Adder 8+9
+3，java Adder 8+9
 
