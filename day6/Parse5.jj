@@ -182,7 +182,9 @@ Node expr() throws NumberFormatException :
 		
 		multi.Set_Opr_Type("*");
 		multi.Set_Value(value);
-	}|
+	}
+	|
+
 	"/" b = <INTEGER>
     {
 		int value_b;
