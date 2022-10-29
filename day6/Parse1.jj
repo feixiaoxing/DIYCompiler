@@ -102,9 +102,9 @@ long expr() throws NumberFormatException :
     int value = 0 ;
 }
 {
-    a = <INTEGER> "-" b = <INTEGER>
+    a = <INTEGER> "+" b = <INTEGER>
     { 
-		value = Integer.parseInt( a.image ) - Integer.parseInt(b.image); 
+		value = Integer.parseInt( a.image ) + Integer.parseInt(b.image);
 	}
     <EOF>
     { return value ; }
