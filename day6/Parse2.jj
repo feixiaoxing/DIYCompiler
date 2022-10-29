@@ -122,7 +122,7 @@ adderNode expr() throws NumberFormatException :
 }
 {
     a = <INTEGER> 
-	 {
+	{
 		int value_a;
 		ValueNode va;
 
