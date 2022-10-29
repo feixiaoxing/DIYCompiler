@@ -57,7 +57,7 @@ public class Parse {
 		}
 	}
 	
-	// adder Node
+	// multi Node
 	class mulDivNode extends Node
 	{
 		public String opr_type;
@@ -132,7 +132,7 @@ Node expr() throws NumberFormatException :
     Token a ;
     Token b ;
     int value = 0 ;
-	mulDivNode adder;
+	mulDivNode multi;
 }
 {
     a = <INTEGER> 
@@ -146,10 +146,10 @@ Node expr() throws NumberFormatException :
 		va.Set_Value(value_a);
 		va.Set_Node_Type("value");
 
-		adder = new mulDivNode();
-		adder.Set_Node_Type("*/");
-		adder.Set_Left_Node(va);
-		adder.Set_Value(value_a);
+		multi = new mulDivNode();
+		multi.Set_Node_Type("*/");
+		multi.Set_Left_Node(va);
+		multi.Set_Value(value_a);
 	}
 	
 	(
@@ -160,28 +160,28 @@ Node expr() throws NumberFormatException :
 		mulDivNode prev;
 
 		value_b = Integer.parseInt(b.image);
-		value = adder.Get_Value() * value_b;
+		value = multi.Get_Value() * value_b;
 
 		vb = new ValueNode();
 		vb.Set_Value(value_b);
 		vb.Set_Node_Type("value");
 
-		if(null == adder.Get_Right_Node())
+		if(null == multi.Get_Right_Node())
 		{
-			adder.Set_Right_Node(vb);
+			multi.Set_Right_Node(vb);
 		}
 		else
 		{
-			prev = adder;
-			adder = new mulDivNode();
-			adder.Set_Node_Type("*/");
+			prev = multi;
+			multi = new mulDivNode();
+			multi.Set_Node_Type("*/");
 			
-			adder.Set_Left_Node(prev);
-			adder.Set_Right_Node(vb);	
+			multi.Set_Left_Node(prev);
+			multi.Set_Right_Node(vb);	
 		}
 		
-		adder.Set_Opr_Type("*");
-		adder.Set_Value(value);
+		multi.Set_Opr_Type("*");
+		multi.Set_Value(value);
 	}|
 	"/" b = <INTEGER>
     {
@@ -190,29 +190,29 @@ Node expr() throws NumberFormatException :
 		mulDivNode prev;
 
 		value_b = Integer.parseInt(b.image);
-		value = adder.Get_Value() / value_b;
+		value = multi.Get_Value() / value_b;
 
 		vb = new ValueNode();
 		vb.Set_Value(value_b);
 
-		if(null == adder.Get_Right_Node())
+		if(null == multi.Get_Right_Node())
 		{
-			adder.Set_Right_Node(vb);
+			multi.Set_Right_Node(vb);
 		}
 		else
 		{
-			prev = adder;
-			adder = new mulDivNode();
+			prev = multi;
+			multi = new mulDivNode();
 			
-			adder.Set_Left_Node(prev);
-			adder.Set_Right_Node(vb);	
+			multi.Set_Left_Node(prev);
+			multi.Set_Right_Node(vb);	
 		}
 		
-		adder.Set_Opr_Type("/");
-		adder.Set_Value(value);
+		multi.Set_Opr_Type("/");
+		multi.Set_Value(value);
 	}
 	
 	)*
     <EOF>
-    { return adder ; }
+    { return multi ; }
 }
