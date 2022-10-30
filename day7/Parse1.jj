@@ -1,0 +1,91 @@
+options {
+    STATIC = false;
+}
+ 
+PARSER_BEGIN(Parse)
+import java.io.*;
+
+class node
+{
+	public node left;
+	public node right;
+	public String node_type;
+	
+	node() {this.left = this.right = null;}
+	public void set_left_node(node left) { this.left = left;}
+	public node get_left_node() { return this.left;}
+	
+	public void set_right_node(node right) { this.right = right;}
+	public node get_right_node() {return this.right;}
+	
+	public void set_node_type(String node_type) {this.node_type = node_type;}
+	public String get_node_type() {return this.node_type;}
+}
+
+class value_node extends node
+{
+	public int value;
+	
+	value_node() { set_node_type("value_node");}
+	public int get_value() { return this.value;}
+	public void set_value(int value) {this.value = value;}
+}
+
+class div_node extends node
+{
+	div_node() { set_node_type("/");}
+	
+	public int get_value() {
+		assert(get_left_node().get_node_type() == "value_node");
+		assert(get_right_node().get_node_type() == "value_node");
+		return ((value_node)get_left_node()).get_value() / ((value_node)get_right_node()).get_value();
+	}
+}
+
+public class Parse {
+
+    public static void main(String[] args) {
+        for (String arg : args) {
+            try {
+                System.out.println(evaluate(arg).get_value());
+            } catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+ 
+    public static div_node evaluate(String src) throws ParseException {
+        Reader reader = new StringReader(src);
+        return  new Parse(reader).expr();
+    }
+}
+PARSER_END(Parse)
+ 
+SKIP: { <[" ", "\t", "\r", "\n"]> }
+TOKEN: {
+    <INTEGER: (["0"-"9"])+>
+}
+ 
+div_node expr() throws NumberFormatException :
+{
+    Token a ;
+    Token b ;
+    div_node div;
+}
+{
+    a = <INTEGER> "/" b = <INTEGER>
+    { 
+		value_node node_a = new value_node();
+		node_a.set_value(Integer.parseInt( a.image ));
+
+		value_node node_b = new value_node();
+		node_b.set_value(Integer.parseInt( b.image ));
+		
+		div = new div_node();
+		div.set_left_node(node_a);
+		div.set_right_node(node_b);
+		
+	}
+    <EOF>
+    { return div ; }
+}
