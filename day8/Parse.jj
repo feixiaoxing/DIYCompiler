@@ -144,6 +144,6 @@ div_node expr() throws NumberFormatException :
 	}
 	)*
 	
-    <EOF>
-    { return div ; }
+	<EOF>
+	{ return div ; }
 }
