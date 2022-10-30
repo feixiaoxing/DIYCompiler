@@ -86,7 +86,7 @@ public class Parse {
     public static void main(String[] args) {
         for (String arg : args) {
             try {
-                System.out.println(evaluate(arg).get_value());
+                System.out.println(evaluate(arg).check_value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
