@@ -112,8 +112,8 @@ div_node expr() throws NumberFormatException :
     div_node div;
 }
 {
-    a = <INTEGER> 
-    { 
+	a = <INTEGER> 
+	{ 
 		value_node node_a = new value_node();
 		node_a.set_value(Integer.parseInt( a.image ));
 		
