@@ -102,11 +102,11 @@ class div_node extends node
 		set_node_name("node" + Integer.toString(Parse.allocate_index()));		
 		if(get_left_node().get_node_type() == "/")
 		{
-			System.out.println(get_node_name() + " " + get_left_node().get_node_name() + "/" + Integer.toString(((value_node)get_right_node()).get_value()));
+			System.out.println("div " + get_node_name() + " " + get_left_node().get_node_name() + " / " + Integer.toString(((value_node)get_right_node()).get_value()));
 		}
 		else
 		{
-			System.out.println(get_node_name() + " " + Integer.toString(((value_node)get_left_node()).get_value()) + "/" + Integer.toString(((value_node)get_right_node()).get_value()));
+			System.out.println("div " + get_node_name() + " " + Integer.toString(((value_node)get_left_node()).get_value()) + " / " + Integer.toString(((value_node)get_right_node()).get_value()));
 		}
 	}
 }
@@ -140,7 +140,20 @@ public class Parse {
 	// tranlsater inter-mediate code, with input is inter-mediate code, and output is assmeble code
 	public static String translate_code(String input)
 	{
-		return "";
+		String assemble;
+
+		String[] sub = input.split(" ");
+		if(sub[2][0] >= '0' && sub[2][0] <= '9')
+		{
+			assemble += "mov ax," + sub[2] + "\n";
+		}
+		else
+		{
+			assemble += "load ax," + sub[2] + "\n";
+		}
+
+		assemble += "mov bx," + sub[3] + "\n";
+		assemble += "store " + sub[1] + " ax";
 	}
 	
 }
