@@ -85,29 +85,32 @@ class div_node extends node
 	}
 	
 	// generate inter-mediate code
-	public void generate_intermediate_code()
+	public String generate_intermediate_code()
 	{
 		int value;
+		String str = "";
 		
 		if(get_left_node().get_node_type() == "/")
 		{
-			((div_node)get_left_node()).generate_intermediate_code();
+			str = ((div_node)get_left_node()).generate_intermediate_code();
 		}
 		
 		if(null == get_right_node())
 		{
-			return;
+			return "";
 		}
 
 		set_node_name("tmp" + Integer.toString(Parse.allocate_index()));
 		if(get_left_node().get_node_type() == "/")
 		{
-			System.out.println("div " + get_node_name() + " " + get_left_node().get_node_name() + " / " + Integer.toString(((value_node)get_right_node()).get_value()));
+			str += "div " + get_node_name() + " " + get_left_node().get_node_name() + " / " + Integer.toString(((value_node)get_right_node()).get_value()) + "\n";
 		}
 		else
 		{
-			System.out.println("div " + get_node_name() + " " + Integer.toString(((value_node)get_left_node()).get_value()) + " / " + Integer.toString(((value_node)get_right_node()).get_value()));
+			str += "div " + get_node_name() + " " + Integer.toString(((value_node)get_left_node()).get_value()) + " / " + Integer.toString(((value_node)get_right_node()).get_value()) + "\n";
 		}
+
+		return str;
 	}
 }
 
@@ -119,8 +122,9 @@ public class Parse {
         for (String arg : args) {
             try {
 				div_node div = evaluate(arg);
-				div.generate_intermediate_code();
-                System.out.println(div.check_value());
+				String str = div.generate_intermediate_code();
+				System.out.println(translate_code(str));
+                //System.out.println(div.check_value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
@@ -154,7 +158,7 @@ public class Parse {
 			assemble += "load ax,[" + sub[2] + "]\n";
 		}
 
-		assemble += "mov bx," + sub[3] + "\n";
+		assemble += "mov bx," + sub[4] + "\n";
 		assemble += "div ax, bx\n";
 		assemble += "store [" + sub[1] + "], ax\n";
 
@@ -164,6 +168,7 @@ public class Parse {
 	public static String translate_code(String input)
 	{
 		String[] sub;
+		String str = "";
 	
 		if(input == "")
 		{
@@ -173,8 +178,10 @@ public class Parse {
 		sub = input.split("\n");
 		for(int i = 0; i < sub.length; i++)
 		{
-			translate_single_code(sub[i]);
+			str += translate_single_code(sub[i]);
 		}
+
+		return str;
 	}
 }
 PARSER_END(Parse)
