@@ -118,7 +118,9 @@ public class Parse {
     public static void main(String[] args) {
         for (String arg : args) {
             try {
-                System.out.println(evaluate(arg).check_value());
+				div_node div = evaluate(arg);
+				div.generate_intermediate_code();
+                System.out.println(div.check_value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
