@@ -154,6 +154,8 @@ public class Parse {
 
 		assemble += "mov bx," + sub[3] + "\n";
 		assemble += "store " + sub[1] + " ax";
+
+		return assemble;
 	}
 	
 }
