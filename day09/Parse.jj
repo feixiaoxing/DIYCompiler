@@ -99,7 +99,7 @@ class div_node extends node
 			return;
 		}
 
-		set_node_name("node" + Integer.toString(Parse.allocate_index()));		
+		set_node_name("tmp" + Integer.toString(Parse.allocate_index()));
 		if(get_left_node().get_node_type() == "/")
 		{
 			System.out.println("div " + get_node_name() + " " + get_left_node().get_node_name() + " / " + Integer.toString(((value_node)get_right_node()).get_value()));
