@@ -120,7 +120,7 @@ public class Parse {
             try {
 				div_node div = evaluate(arg);
 				div.generate_intermediate_code();
-                System.out.println(div.check_value());
+                //System.out.println(div.check_value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
             }
