@@ -140,7 +140,7 @@ public class Parse {
 	}
 
 	// tranlsater inter-mediate code, with input is inter-mediate code, and output is assmeble code
-	public static String translate_code(String input)
+	public static String translate_single_code(String input)
 	{
 		String assemble = "";
 
@@ -160,7 +160,22 @@ public class Parse {
 
 		return assemble;
 	}
+
+	public static String translate_code(String input)
+	{
+		String[] sub;
 	
+		if(input == "")
+		{
+			return "";
+		}
+
+		sub = input.split("\n");
+		for(int i = 0; i < sub.length; i++)
+		{
+			translate_single_code(sub[i]);
+		}
+	}
 }
 PARSER_END(Parse)
  
