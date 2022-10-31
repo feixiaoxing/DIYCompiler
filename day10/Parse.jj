@@ -149,11 +149,11 @@ public class Parse {
 		}
 		else
 		{
-			assemble += "load ax," + sub[2] + "\n";
+			assemble += "load ax,[" + sub[2] + "]\n";
 		}
 
 		assemble += "mov bx," + sub[3] + "\n";
-		assemble += "store " + sub[1] + " ax";
+		assemble += "store [" + sub[1] + "], ax\n";
 
 		return assemble;
 	}
