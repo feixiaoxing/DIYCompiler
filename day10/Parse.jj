@@ -153,6 +153,7 @@ public class Parse {
 		}
 
 		assemble += "mov bx," + sub[3] + "\n";
+		assemble += "div ax, bx\n";
 		assemble += "store [" + sub[1] + "], ax\n";
 
 		return assemble;
