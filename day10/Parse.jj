@@ -113,7 +113,7 @@ class div_node extends node
 
 public class Parse {
 
-	public static int index = 0;
+    public static int index = 0;
 
     public static void main(String[] args) {
         for (String arg : args) {
