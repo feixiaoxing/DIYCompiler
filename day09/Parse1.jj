@@ -28,7 +28,7 @@ class node
 
 	public void set_depth() {this.depth = depth;}
 	public int get_depth() {return this.depth;}
-	public int calculate_depth() { // node depth should be calculated before print it
+	public int calculate_depth() { // node depth should be calculated before print it, so just calculate root node
 
 		int left_depth = 0;
 		int right_depth = 0;
