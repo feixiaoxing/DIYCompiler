@@ -11,6 +11,7 @@ class node
 	public node right;
 	public String node_type;
 	public String node_name;
+	public int depth;
 	
 	node() {this.left = this.right = null;}
 	public void set_left_node(node left) { this.left = left;}
@@ -24,6 +25,52 @@ class node
 	
 	public void set_node_name(String node_name) {this.node_name = node_name;}
 	public String get_node_name() {return this.node_name;}
+
+	public void set_depth(int depth) {this.depth = depth;}
+	public int get_depth() {return this.depth;}
+	public int calculate_depth() { // node depth should be calculated before print it, so just calculate root node
+
+		int left_depth = 0;
+		int right_depth = 0;
+		int final_depth = 0;
+		if(get_left_node() == null && get_right_node() == null) {
+			set_depth(1);
+			return 1;
+		}
+		
+		if(null != get_left_node()) {
+			left_depth = get_left_node().calculate_depth();
+		}
+
+		if(null != get_right_node()){
+			right_depth = get_right_node().calculate_depth();
+		}
+		
+		final_depth = (left_depth > right_depth) ? (left_depth+1) :(right_depth +1);
+		set_depth(final_depth);
+		return final_depth;
+	}
+	
+	public void print_node(int start_depth, int start_point) // add print node function
+	{
+		int i = 0;
+		
+		for(i =0; i < (start_point - start_depth*5); i++){
+			System.out.print(" ");
+		}
+		
+		if(get_node_type() != "value_node")
+		{
+			System.out.println(get_node_name());
+		}
+		else
+		{
+			System.out.println(((value_node)this).get_value());
+		}
+
+		if(get_left_node() != null) get_left_node().print_node(start_depth -1, start_point);
+		if(get_right_node() != null) get_right_node().print_node(start_depth -1, start_point);
+	}
 }
 
 class value_node extends node
@@ -116,14 +163,21 @@ class div_node extends node
 
 public class Parse {
 
-    public static int index = 0;
+	public static int index = 0;
 
     public static void main(String[] args) {
         for (String arg : args) {
             try {
 				div_node div = evaluate(arg);
 				String str = div.generate_intermediate_code();
+
+				System.out.println("");
+				div.calculate_depth();
+				div.print_node(div.get_depth(), div.get_depth()*5);
+
+				System.out.println("");
 				System.out.println(translate_code(str));
+
                 //System.out.println(div.check_value());
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
@@ -182,7 +236,7 @@ public class Parse {
 		}
 
 		return str;
-	}
+	}	
 }
 PARSER_END(Parse)
  
