@@ -53,10 +53,10 @@ class node
 	
 	public int print_node() // add print node function
 	{
-		int depth = get_depth();
+		int final_depth = get_depth();
 		int i = 0;
 		
-		for(i =0; i < depth; i++){
+		for(i =0; i < final_depth; i++){
 			System.out.print(" ");
 		}
 		
