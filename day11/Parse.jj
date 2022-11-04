@@ -214,7 +214,7 @@ public class Parse {
 
 		assemble += "mov bx," + sub[4] + "\n";
 		assemble += "div ax, bx\n";
-		assemble += "store [" + sub[1] + "], ax\n";
+		assemble += "store [" + sub[1] + "],ax\n";
 
 		return assemble;
 	}
