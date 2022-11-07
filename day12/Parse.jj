@@ -7,158 +7,158 @@ import java.io.*;
 
 class node
 {
-	public node left;
-	public node right;
-	public String node_type;
-	public String node_name;
-	public int depth;
-	
-	node() {this.left = this.right = null;}
-	public void set_left_node(node left) { this.left = left;}
-	public node get_left_node() { return this.left;}
-	
-	public void set_right_node(node right) { this.right = right;}
-	public node get_right_node() {return this.right;}
-	
-	public void set_node_type(String node_type) {this.node_type = node_type;}
-	public String get_node_type() {return this.node_type;}
-	
-	public void set_node_name(String node_name) {this.node_name = node_name;}
-	public String get_node_name() {return this.node_name;}
+    public node left;
+    public node right;
+    public String node_type;
+    public String node_name;
+    public int depth;
+    
+    node() {this.left = this.right = null;}
+    public void set_left_node(node left) { this.left = left;}
+    public node get_left_node() { return this.left;}
+    
+    public void set_right_node(node right) { this.right = right;}
+    public node get_right_node() {return this.right;}
+    
+    public void set_node_type(String node_type) {this.node_type = node_type;}
+    public String get_node_type() {return this.node_type;}
+    
+    public void set_node_name(String node_name) {this.node_name = node_name;}
+    public String get_node_name() {return this.node_name;}
 
-	public void set_depth(int depth) {this.depth = depth;}
-	public int get_depth() {return this.depth;}
-	public int calculate_depth() { // node depth should be calculated before print it, so just calculate root node
+    public void set_depth(int depth) {this.depth = depth;}
+    public int get_depth() {return this.depth;}
+    public int calculate_depth() { // node depth should be calculated before print it, so just calculate root node
 
-		int left_depth = 0;
-		int right_depth = 0;
-		int final_depth = 0;
-		if(get_left_node() == null && get_right_node() == null) {
-			set_depth(1);
-			return 1;
-		}
-		
-		if(null != get_left_node()) {
-			left_depth = get_left_node().calculate_depth();
-		}
+        int left_depth = 0;
+        int right_depth = 0;
+        int final_depth = 0;
+        if(get_left_node() == null && get_right_node() == null) {
+            set_depth(1);
+            return 1;
+        }
+        
+        if(null != get_left_node()) {
+            left_depth = get_left_node().calculate_depth();
+        }
 
-		if(null != get_right_node()){
-			right_depth = get_right_node().calculate_depth();
-		}
-		
-		final_depth = (left_depth > right_depth) ? (left_depth+1) :(right_depth +1);
-		set_depth(final_depth);
-		return final_depth;
-	}
-	
-	public void print_node(int start_depth, int start_point) // add print node function
-	{
-		int i = 0;
-		
-		for(i =0; i < (start_point - start_depth*5); i++){
-			System.out.print(" ");
-		}
-		
-		if(get_node_type() != "value_node")
-		{
-			System.out.println(get_node_name() == null ? '/' : get_node_name());
-		}
-		else
-		{
-			System.out.println(((value_node)this).get_value());
-		}
+        if(null != get_right_node()){
+            right_depth = get_right_node().calculate_depth();
+        }
+        
+        final_depth = (left_depth > right_depth) ? (left_depth+1) :(right_depth +1);
+        set_depth(final_depth);
+        return final_depth;
+    }
+    
+    public void print_node(int start_depth, int start_point) // add print node function
+    {
+        int i = 0;
+        
+        for(i =0; i < (start_point - start_depth*5); i++){
+            System.out.print(" ");
+        }
+        
+        if(get_node_type() != "value_node")
+        {
+            System.out.println(get_node_name() == null ? '/' : get_node_name());
+        }
+        else
+        {
+            System.out.println(((value_node)this).get_value());
+        }
 
-		if(get_left_node() != null) get_left_node().print_node(start_depth -1, start_point);
-		if(get_right_node() != null) get_right_node().print_node(start_depth -1, start_point);
-	}
+        if(get_left_node() != null) get_left_node().print_node(start_depth -1, start_point);
+        if(get_right_node() != null) get_right_node().print_node(start_depth -1, start_point);
+    }
 }
 
 class value_node extends node
 {
-	public int value;
-	
-	value_node() { set_node_type("value_node");}
-	public int get_value() { return this.value;}
-	public void set_value(int value) {this.value = value;}
+    public int value;
+    
+    value_node() { set_node_type("value_node");}
+    public int get_value() { return this.value;}
+    public void set_value(int value) {this.value = value;}
 }
 
 class div_node extends node
 {
-	div_node() { set_node_type("/");}
-	
-	public int get_value() {
-		int left = 0, right = 0;
-		
-		// get left node
-		if(get_left_node().get_node_type() == "/")
-		{
-			left = ((div_node)get_left_node()).get_value();
-		}
-		else
-		{
-			left = ((value_node)get_left_node()).get_value();
-		}
+    div_node() { set_node_type("/");}
+    
+    public int get_value() {
+        int left = 0, right = 0;
+        
+        // get left node
+        if(get_left_node().get_node_type() == "/")
+        {
+            left = ((div_node)get_left_node()).get_value();
+        }
+        else
+        {
+            left = ((value_node)get_left_node()).get_value();
+        }
 
-		// get right node
-		if(get_right_node() == null)
-		{
-			return left;
-		}
-		else
-		{
-			right = ((value_node)get_right_node()).get_value();
-			return left/right;
-		}
-	}
+        // get right node
+        if(get_right_node() == null)
+        {
+            return left;
+        }
+        else
+        {
+            right = ((value_node)get_right_node()).get_value();
+            return left/right;
+        }
+    }
 
-	// add semantic check
-	public int check_value() {
-	
-		if(get_right_node() != null)
-		{
-			if( 0 == ((value_node)get_right_node()).get_value())
-			{
-				System.out.println("Div by Zero");
-				return -1;
-			}
-		}
-		
-		if(get_left_node().get_node_type() == "/")
-		{
-			return ((div_node)(get_left_node())).check_value();
-		}
+    // add semantic check
+    public int check_value() {
+    
+        if(get_right_node() != null)
+        {
+            if( 0 == ((value_node)get_right_node()).get_value())
+            {
+                System.out.println("Div by Zero");
+                return -1;
+            }
+        }
+        
+        if(get_left_node().get_node_type() == "/")
+        {
+            return ((div_node)(get_left_node())).check_value();
+        }
 
-		return 1;
-	}
-	
-	// generate inter-mediate code
-	public String generate_intermediate_code()
-	{
-		int value;
-		String str = "";
-		
-		if(get_left_node().get_node_type() == "/")
-		{
-			str = ((div_node)get_left_node()).generate_intermediate_code();
-		}
-		
-		if(null == get_right_node())
-		{
-			return "";
-		}
+        return 1;
+    }
+    
+    // generate inter-mediate code
+    public String generate_intermediate_code()
+    {
+        int value;
+        String str = "";
+        
+        if(get_left_node().get_node_type() == "/")
+        {
+            str = ((div_node)get_left_node()).generate_intermediate_code();
+        }
+        
+        if(null == get_right_node())
+        {
+            return "";
+        }
 
-		set_node_name("tmp" + Integer.toString(Parse.allocate_index()));
-		if(get_left_node().get_node_type() == "/")
-		{
-			str += "div " + get_node_name() + " " + get_left_node().get_node_name() + " / " + Integer.toString(((value_node)get_right_node()).get_value()) + "\n";
-		}
-		else
-		{
-			str += "div " + get_node_name() + " " + Integer.toString(((value_node)get_left_node()).get_value()) + " / " + Integer.toString(((value_node)get_right_node()).get_value()) + "\n";
-		}
+        set_node_name("tmp" + Integer.toString(Parse.allocate_index()));
+        if(get_left_node().get_node_type() == "/")
+        {
+            str += "div " + get_node_name() + " " + get_left_node().get_node_name() + " / " + Integer.toString(((value_node)get_right_node()).get_value()) + "\n";
+        }
+        else
+        {
+            str += "div " + get_node_name() + " " + Integer.toString(((value_node)get_left_node()).get_value()) + " / " + Integer.toString(((value_node)get_right_node()).get_value()) + "\n";
+        }
 
-		return str;
-	}
+        return str;
+    }
 }
 
 public class Parse {
@@ -168,27 +168,27 @@ public class Parse {
     public static void main(String[] args) {
         for (String arg : args) {
             try {
-				// generate syntax tree
-				div_node div = evaluate(arg);
+                // generate syntax tree
+                div_node div = evaluate(arg);
 
-				// print tree
-				System.out.println("");
-				div.calculate_depth();
-				div.print_node(div.get_depth(), div.get_depth()*5);
+                // print tree
+                System.out.println("");
+                div.calculate_depth();
+                div.print_node(div.get_depth(), div.get_depth()*5);
 
-				// add semantic check
-				System.out.println("\n\n");
-				System.out.println(div.check_value());
+                // add semantic check
+                System.out.println("\n\n");
+                System.out.println(div.check_value());
 
-				// generate intermediate code
-				String str = div.generate_intermediate_code();
+                // generate intermediate code
+                String str = div.generate_intermediate_code();
 
-				// translate code
-				str = translate_code(str);
+                // translate code
+                str = translate_code(str);
 
-				// optimise assemble code
-				System.out.println("");
-				System.out.println(optimise_assemble_code(str));
+                // optimise assemble code
+                System.out.println("");
+                System.out.println(optimise_assemble_code(str));
 
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
@@ -200,108 +200,108 @@ public class Parse {
         Reader reader = new StringReader(src);
         return  new Parse(reader).expr();
     }
-	
-	// important index
-	public static int allocate_index()
-	{
-		index += 1;
-		return index;
-	}
+    
+    // important index
+    public static int allocate_index()
+    {
+        index += 1;
+        return index;
+    }
 
-	// tranlsater inter-mediate code, with input is inter-mediate code, and output is assmeble code
-	public static String translate_single_code(String input)
-	{
-		String assemble = "";
+    // tranlsater inter-mediate code, with input is inter-mediate code, and output is assmeble code
+    public static String translate_single_code(String input)
+    {
+        String assemble = "";
 
-		String[] sub = input.split(" ");
-		if(sub[2].charAt(0) >= '0' && sub[2].charAt(0) <= '9')
-		{
-			assemble += "mov ax," + sub[2] + "\n";
-		}
-		else
-		{
-			assemble += "load ax,[" + sub[2] + "]\n";
-		}
+        String[] sub = input.split(" ");
+        if(sub[2].charAt(0) >= '0' && sub[2].charAt(0) <= '9')
+        {
+            assemble += "mov ax," + sub[2] + "\n";
+        }
+        else
+        {
+            assemble += "load ax,[" + sub[2] + "]\n";
+        }
 
-		assemble += "mov bx," + sub[4] + "\n";
-		assemble += "div ax, bx\n";
-		assemble += "store [" + sub[1] + "],ax\n";
+        assemble += "mov bx," + sub[4] + "\n";
+        assemble += "div ax, bx\n";
+        assemble += "store [" + sub[1] + "],ax\n";
 
-		return assemble;
-	}
-	
-	public static String optimise_assemble_code(String input)
-	{
-		String [] sub;
-		String str = "";
-		
-		if( input == "")
-		{
-			return "";
-		}
-		
-		sub = input.split("\n");
-		for(int i = 0; i < sub.length; i += 1)
-		{
-			int j;
-			String [] word_i;
-			String [] word_j;
-			
-			j = i + 1;
-			if(j < sub.length)
-			{
-				word_i = sub[i].split(" ");
-				word_j = sub[j].split(" ");
-				
-				if(false == word_i[0].equals("store"))
-				{
-					str += sub[i] + "\n";
-					continue;
-				}
-				
-				if( false == word_j[0].equals("load"))
-				{
-					str += sub[i] + "\n";
-					continue;
-				}
+        return assemble;
+    }
+    
+    public static String optimise_assemble_code(String input)
+    {
+        String [] sub;
+        String str = "";
+        
+        if( input == "")
+        {
+            return "";
+        }
+        
+        sub = input.split("\n");
+        for(int i = 0; i < sub.length; i += 1)
+        {
+            int j;
+            String [] word_i;
+            String [] word_j;
+            
+            j = i + 1;
+            if(j < sub.length)
+            {
+                word_i = sub[i].split(" ");
+                word_j = sub[j].split(" ");
+                
+                if(false == word_i[0].equals("store"))
+                {
+                    str += sub[i] + "\n";
+                    continue;
+                }
+                
+                if( false == word_j[0].equals("load"))
+                {
+                    str += sub[i] + "\n";
+                    continue;
+                }
 
-				// check register and local mem
-				if(word_i[1].split(",")[0].equals(word_j[1].split(",")[1]) && word_i[1].split(",")[1].equals(word_j[1].split(",")[0]))
-				{
-					i += 1;
-				}
-				else
-				{
-					str += sub[i] + "\n";
-				}
-			}
-			else
-			{
-				str += sub[i] + "\n";
-			}
-		}
+                // check register and local mem
+                if(word_i[1].split(",")[0].equals(word_j[1].split(",")[1]) && word_i[1].split(",")[1].equals(word_j[1].split(",")[0]))
+                {
+                    i += 1;
+                }
+                else
+                {
+                    str += sub[i] + "\n";
+                }
+            }
+            else
+            {
+                str += sub[i] + "\n";
+            }
+        }
 
-		return str;
-	}
+        return str;
+    }
 
-	public static String translate_code(String input)
-	{
-		String[] sub;
-		String str = "";
-	
-		if(input == "")
-		{
-			return "";
-		}
+    public static String translate_code(String input)
+    {
+        String[] sub;
+        String str = "";
+    
+        if(input == "")
+        {
+            return "";
+        }
 
-		sub = input.split("\n");
-		for(int i = 0; i < sub.length; i++)
-		{
-			str += translate_single_code(sub[i]);
-		}
+        sub = input.split("\n");
+        for(int i = 0; i < sub.length; i++)
+        {
+            str += translate_single_code(sub[i]);
+        }
 
-		return str;
-	}	
+        return str;
+    }   
 }
 PARSER_END(Parse)
  
@@ -317,38 +317,38 @@ div_node expr() throws NumberFormatException :
     div_node div;
 }
 {
-	a = <INTEGER> 
-	{ 
-		value_node node_a = new value_node();
-		node_a.set_value(Integer.parseInt( a.image ));
-		
-		div = new div_node();
-		div.set_left_node(node_a);
-		
-	}
-	
-	(
-	"/" b = <INTEGER>
-	{
-		value_node node_b = new value_node();
-		node_b.set_value(Integer.parseInt( b.image ));
+    a = <INTEGER> 
+    { 
+        value_node node_a = new value_node();
+        node_a.set_value(Integer.parseInt( a.image ));
+        
+        div = new div_node();
+        div.set_left_node(node_a);
+        
+    }
+    
+    (
+    "/" b = <INTEGER>
+    {
+        value_node node_b = new value_node();
+        node_b.set_value(Integer.parseInt( b.image ));
 
-		// important code about node adding
-		if(div.get_right_node() == null)
-		{
-			div.set_right_node(node_b);
-		}
-		else
-		{
-			div_node prev = div;
-			div = new div_node();
-			
-			div.set_left_node(prev);
-			div.set_right_node(node_b);
-		}
-	}
-	)*
-	
-	<EOF>
-	{ return div ; }
+        // important code about node adding
+        if(div.get_right_node() == null)
+        {
+            div.set_right_node(node_b);
+        }
+        else
+        {
+            div_node prev = div;
+            div = new div_node();
+            
+            div.set_left_node(prev);
+            div.set_right_node(node_b);
+        }
+    }
+    )*
+    
+    <EOF>
+    { return div ; }
 }
